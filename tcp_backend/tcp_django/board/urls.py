@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from board.controller.views import BoardView
 
 router = DefaultRouter()
+router.register(r'board', BoardView)
 
 urlpatterns = [
     path("", include(router.urls)),
