@@ -25,7 +25,7 @@ jobs:
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
+        restore-keys: |m
           ${{ runner.os }}-pip-
 
     - name: Install Dependencies
@@ -65,7 +65,7 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        cd lms_project
+        cd tcp_project
         docker buildx build --platform linux/arm64 -f Dockerfile -t ${{ env.DOCKER_IMAGE}}:latest --push .latest --push .
 
   deploy:
