@@ -72,7 +72,7 @@ jobs:
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
 
     - name: Wait for MySQL to be ready
-      working-directory: ./lms_project
+      working-directory: ./tcp_backend/tcp_django
       run: |
         for i in {60..0}; do
           if mysqladmin ping -h "127.0.0.1" --silent; then
