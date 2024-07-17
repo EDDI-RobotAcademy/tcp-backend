@@ -13,7 +13,7 @@ jobs:
       uses: samin/mysql-action@v1
       with:
         character set server: 'utf8'
-        mysql database: ${{ serects.DATABASE_NAME }}
+        mysql database: ${{ secrets.DATABASE_NAME }}
         mysql user: ${{ serects.DATATBASE_USER }}
         mysql password: ${{ serects.DATABASE_PASSWORD }}
 
