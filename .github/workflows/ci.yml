@@ -14,8 +14,8 @@ jobs:
       with:
         character set server: 'utf8'
         mysql database: ${{ secrets.DATABASE_NAME }}
-        mysql user: ${{ serects.DATATBASE_USER }}
-        mysql password: ${{ serects.DATABASE_PASSWORD }}
+        mysql user: ${{ secrets.DATATBASE_USER }}
+        mysql password: ${{ secrets.DATABASE_PASSWORD }}
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -55,21 +55,21 @@ jobs:
     - name: Create .env file for CI
       working-directory: ./tcp-backend/tcp-django
       run: |
-        echo "CORS_ALLOWED_ORIGINS=${{ serects.CORS_ALLOWED_ORIGINS }}" > .env
-        echo "CSRF_TRUSTED_ORIGINS=${{ serects.CSRF_TRUSTED_ORIGINS }}" >> .env
-        echo "DATABASE_NAME=${{ serects.DATABASE_NAME }}" >> .env
-        echo "DATABASE_USER=${{ serects.DATABASE_USER }}" >> .env
-        echo "DATABASE_PASSWORD=${{ serects.DATABASE_PASSWORD }}" >> .env
+        echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" > .env
+        echo "CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}" >> .env
+        echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+        echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
+        echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
         echo "DATABASE_HOST=127.0.0.1" >> .env
         echo "DATABASE_PORT=3306" >> .env
-        echo "KAKAO_LOGIN_URL=${{ serects.KAKAO_LOGIN_URL }}" >> .env
-        echo "KAKAO_CLIENT_ID=${{ serects.KAKAO_CLIENT_ID }}" >> .env
-        echo "KAKAO_REDIRECT_URI=${{ serects.KAKAO_REDIRECT_URI }}" >> .env
-        echo "KAKAO_TOKEN_REQUEST_URI=${{ serects.KAKAO_TOKEN_REQUEST_URI }}" >> .env
-        echo "KAKAO_USERINFO_REQUEST_URI=${{ serects.KAKAO_USERINFO_REQUEST_URI }}" >> .env
-        echo "REDIS_HOST=${{ serects.REDIS_HOST }}" >> .env
-        echo "REDIS_PORT=${{ serects.REDIS_PORT }}" >> .env
-        echo "REDIS_PASSWORD=${{ serects.REDIS_PASSWORD }}" >> .env
+        echo "KAKAO_LOGIN_URL=${{ secrets.KAKAO_LOGIN_URL }}" >> .env
+        echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+        echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+        echo "KAKAO_TOKEN_REQUEST_URI=${{ secrets.KAKAO_TOKEN_REQUEST_URI }}" >> .env
+        echo "KAKAO_USERINFO_REQUEST_URI=${{ secrets.KAKAO_USERINFO_REQUEST_URI }}" >> .env
+        echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+        echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
 
     - name: Wait for MySQL to be ready
       working-directory: ./tcp-backend/tcp-django
