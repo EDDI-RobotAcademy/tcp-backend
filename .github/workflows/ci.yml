@@ -40,7 +40,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Install Dependencies
-      working-directory: ./lms_project
+      working-directory: ./tcp-backend/tcp-django
       run: |
         if [ -f requirements.txt ]; then
           python -m venv .venv
