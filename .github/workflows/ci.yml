@@ -14,7 +14,7 @@ jobs:
       with:
         character set server: 'utf8'
         mysql database: ${{ secrets.DATABASE_NAME }}
-        mysql user: ${{ secrets.DATATBASE_USER }}
+        mysql user: ${{ secrets.DATABASE_USER }}
         mysql password: ${{ secrets.DATABASE_PASSWORD }}
 
     - name: Checkout code
@@ -23,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.12
+        python-version: '3.12.3'
 
     - name: Check current directory
       run: pwd
@@ -40,7 +40,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Install Dependencies
-      working-directory: ./tcp-backend/tcp-django
+      working-directory: ./lms_project
       run: |
         if [ -f requirements.txt ]; then
           python -m venv .venv
