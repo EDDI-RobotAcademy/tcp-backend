@@ -28,7 +28,6 @@ SECRET_KEY = "django-insecure-w)cf=!mcmu%@dmq%zp998w((o0#+_b1$4g1gl2#@r@hi^5y+7(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -40,11 +39,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'corsheaders',
     "rest_framework",
+    'django_extensions',
     "board",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -52,6 +54,49 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+KAKAO = {
+    'LOGIN_URL': os.getenv('KAKAO_LOGIN_URL'),
+    'CLIENT_ID': os.getenv('KAKAO_CLIENT_ID'),
+    'REDIRECT_URI': os.getenv('KAKAO_REDIRECT_URI'),
+    'TOKEN_REQUEST_URI': os.getenv('KAKAO_TOKEN_REQUEST_URI'),
+    'USERINFO_REQUEST_URI': os.getenv('KAKAO_USERINFO_REQUEST_URI'),
+}
+
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+
+print('CORS_ALLOWED_ORIGINS:', CORS_ALLOWED_ORIGINS)
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = "tcp_django.urls"
@@ -85,8 +130,24 @@ DATABASES = {
         "NAME": os.getenv('DATABASE_NAME'),
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': os.getenv('DATABASE_HOST'),
         'PORT': '3306',
+    }
+}
+
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': REDIS_PASSWORD,
+            'SOCKET_CONNECT_TIMEOUT': 5,
+        }
     }
 }
 
