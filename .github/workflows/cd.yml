@@ -1,11 +1,11 @@
 name: Django CD (Continuous Deploy)
 
-env:
-	DOCKER_IMAGE: ghcr.io/${{ secrets.REAL_ACTOR }}/tcp-backend
-
 on:
   repository_dispatch:
     types: [BACKEND_TEST_FINISH_TRIGGER]
+
+env:
+  DOCKER_IMAGE: ghcr.io/${{ secrets.REAL_ACTOR }}/tcp-backend
 
 jobs:
   build:
