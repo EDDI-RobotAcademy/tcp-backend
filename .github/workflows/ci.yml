@@ -106,7 +106,7 @@ jobs:
       working-directory: ./tcp_backend/tcp_django
       run: |
         source .venv/bin/activate
-        pythob manage.py test $TEST_MODULES
+        python manage.py test $TEST_MODULES
 
     - name: send BACKEND_TEST_FINISH_TRIGGER
       run: |
