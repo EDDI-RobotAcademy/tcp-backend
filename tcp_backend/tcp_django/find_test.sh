@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 TEST_DIRS=$(find . -path ./.venv -prune -o -type d -name 'tests' -print)
 
