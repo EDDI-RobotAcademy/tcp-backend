@@ -1,5 +1,8 @@
 name: Django CD (Continuous Deploy)
 
+env:
+	DOCKER_IMAGE: ghcr.io/${{ secrets.REAL_ACTOR }}/tcp-backend
+
 on:
   repository_dispatch:
     types: [BACKEND_TEST_FINISH_TRIGGER]
@@ -62,8 +65,8 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        cd tcp_backend/tcp_django
-        docker buildx build --platform linux/arm64 -f Dockerfile -t ghcr.io/${{ github.actor }}/django-backend-server:latest --push .
+        cd lms_project
+        docker buildx build --platform linux/arm64 -f Dockerfile -t ${{ env.DOCKER_IMAGE}}:latest --push .latest --push .
 
   deploy:
     needs: build
@@ -74,7 +77,7 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
+        username: ${{ secrets.REAL_ACTOR }}
         password: ${{ secrets.GHCR_TOKEN }}
 
     - name: Deploy to Production
