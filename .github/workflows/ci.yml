@@ -106,11 +106,11 @@ jobs:
       working-directory: ./tcp_backend/tcp_django
       run: |
         source .venv/bin/activate
-        pythob manage.py test $TEST_MODULES
+        python manage.py test $TEST_MODULES
 
     - name: send BACKEND_TEST_FINISH_TRIGGER
       run: |
         curl -S -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
               -H 'Accept: application/vnd.github.v3+json' \
               -u ${{ secrets.GHCR_TOKEN }} \
-              -d '{"event_type": "FRONTEND_TEST_FINISH_TRIGGER", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+              -d '{"event_type": "BACKEND_TEST_FINISH_TRIGGER", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
