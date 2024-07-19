@@ -19,7 +19,7 @@ class BoardView(viewsets.ViewSet):
 
     def create(self, request):
         data = request.data
-        serializer = BoardSerializer(data)
+        serializer = BoardSerializer(data=data)
 
         if serializer.is_valid():
             board= self.boardService.createBoard(serializer.validated_data)
