@@ -38,6 +38,11 @@ jobs:
           exit 1
         fi
 
+    - name: Grant execute permission for scripts
+      run: |
+        chmod +x tcp_backend/tcp_django/wait-for-it.sh
+        chmod +x tcp_backend/tcp_django/manage.py
+
     - name: Configure Docker
       uses: docker/setup-buildx-action@v1
 
@@ -63,7 +68,7 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         cd tcp_backend/tcp_django
-        docker buildx build --platform linux/arm64 -f Dockerfile -t ghcr.io/${{ github.actor }}/django-backend-server:latest --push .
+        docker buildx build --platform linux/arm64 -f Dockerfile -t ghcr.io/${{ github.actor }}/tcp-django-backend-server:latest --push .
 
   deploy:
     needs: build
@@ -86,12 +91,15 @@ jobs:
         script_stop: true
         script: |
             cd /home/ec2-user/tcp/django-backend
+            
             docker-compose down
-
             echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ github.actor }}/django-backend-server:latest
-
-            docker image prune -f
-            docker logout
-
+            
             docker-compose up -d
+
+            docker logout
+            docker image prune -f
+            
+    - name: Remove Github Actions IP From Security Group
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
