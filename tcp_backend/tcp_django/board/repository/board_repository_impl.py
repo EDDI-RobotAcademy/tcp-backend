@@ -26,3 +26,6 @@ class BoardRepositoryImpl(BoardRepository):
         board = Board(**boardData)
         board.save()
         return board
+
+    def findByBoardId(self, boardId):
+        return Board.objects.get(boardId=boardId)
