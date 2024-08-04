@@ -11,5 +11,9 @@ class BoardRepository(ABC):
         pass
 
     @abstractmethod
+    def findByBoardId(self, boardId):
+        pass
+
+    @abstractmethod
     def deleteByBoardId(self, boardId):
         pass
