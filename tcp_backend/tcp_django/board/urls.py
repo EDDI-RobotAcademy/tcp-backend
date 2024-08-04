@@ -10,6 +10,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("list/", BoardView.as_view({"get": "list"}), name="board-list"),
     path("register", BoardView.as_view({"post": "create"}), name="board-register"),
-    path('read/<int:pk>', BoardView.as_view({'get': 'read'}), name='board-read'),
+    path("read/<int:pk>", BoardView.as_view({"get": "read"}), name="board-read"),
     path("delete/<int:pk>", BoardView.as_view({"delete": "removeBoard"}), name="board-remove"),
+    path("modify/<int:pk>", BoardView.as_view({"put": "modifyBoard"}), name="board-modify"),
 ]
