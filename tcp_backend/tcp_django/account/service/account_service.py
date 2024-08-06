@@ -18,3 +18,6 @@ class AccountService(ABC):
     def findAccountByEmail(self, email):
         pass
     
+    @abstractmethod
+    def withdrawAccount(self, accountId, withdrawReason):
+        pass

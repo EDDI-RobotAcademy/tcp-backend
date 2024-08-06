@@ -41,3 +41,11 @@ class AccountServiceImpl(AccountService):
             self.__profileRepository.update_login_history(profile)
         return profile
     
+    def withdrawAccount(self, accountId, withdrawReason):
+        account = self.__accountRepository.findById(accountId)
+        try:
+            self.__accountRepository.withdrawAccount(account, withdrawReason)
+            return True
+        except Exception as e:
+            print(f"withdraw_account error: {e}")
+            return False
