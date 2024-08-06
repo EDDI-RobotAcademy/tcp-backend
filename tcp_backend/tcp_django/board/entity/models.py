@@ -1,7 +1,8 @@
 from django.db import models
 
-class Community(models.Model):
-    communityId = models.AutoField(primary_key=True)
+# Create your models here.
+class Board(models.Model):
+    boardId = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128, null=False)
     writer = models.CharField(max_length=32, null=False)
     content = models.TextField()
@@ -12,4 +13,4 @@ class Community(models.Model):
         return self.title
 
     class Meta:
-        db_table = 'community'
+        db_table = 'board'
