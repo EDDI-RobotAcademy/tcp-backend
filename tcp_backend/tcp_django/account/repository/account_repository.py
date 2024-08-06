@@ -14,3 +14,6 @@ class AccountRepository(ABC):
     def updateLastLogin(self, profile):
         pass
 
+    @abstractmethod
+    def withdrawAccount(self, account, withdrawReason):
+        pass
