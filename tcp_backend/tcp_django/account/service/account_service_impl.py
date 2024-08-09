@@ -30,9 +30,9 @@ class AccountServiceImpl(AccountService):
         profile = self.__profileRepository.findByNickname(nickname)
         return profile is not None
 
-    def registerAccount(self, loginType, roleType, nickname, email, gender, birthyear):
+    def registerAccount(self, loginType, roleType, nickname, email, password, gender, birthyear):
         account = self.__accountRepository.create(loginType, roleType)
-        return self.__profileRepository.create(nickname, email, gender, birthyear, account)
+        return self.__profileRepository.create(nickname, email, password, gender, birthyear, account)
 
     def findAccountByEmail(self, email):
         profile = self.__profileRepository.findByEmail(email)

@@ -1,3 +1,7 @@
+import hashlib
+import os
+
+from dotenv import load_dotenv
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -14,12 +18,16 @@ class AccountView(viewsets.ViewSet):
     accountRepository = AccountRepositoryImpl.getInstance()
     redisService = RedisServiceImpl.getInstance()
 
+    load_dotenv()
+
     def checkEmailDuplication(self, request):
         print("checkEmailDuplication()")
 
         try:
-            email = request.data.get("email")
+            email = request.data.get("newEmail")
+            print(f"email: {email}")
             isDuplicate = self.accountService.checkEmailDuplication(email)
+            print(f"isDuplicate: {isDuplicate}")
 
             return Response(
                 {
@@ -59,23 +67,42 @@ class AccountView(viewsets.ViewSet):
         try:
             nickname = request.data.get("nickname")
             email = request.data.get("email")
+            password = request.data.get("password")
             gender = request.data.get("gender")  # 성별 추가
             birthyear = request.data.get("birthyear")  # 생년월일 추가
+            loginType = request.data.get("loginType")
 
-            account = self.accountService.registerAccount(
-                loginType="KAKAO",
-                roleType="NORMAL",
-                nickname=nickname,
-                email=email,
-                gender=gender,
-                birthyear=birthyear,
-            )
+            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            hashedPassword = hashlib.sha256(encodedPassword)
+            password = hashedPassword.hexdigest()
+
+            if loginType == "NORMAL":
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=password,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+            else:
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=None,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+
 
             serializer = AccountSerializer(account)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             print("계정 생성 중 에러 발생:", e)
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def getNickname(self, request):
         userToken = request.data.get("userToken")
