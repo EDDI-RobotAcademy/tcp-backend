@@ -8,6 +8,7 @@ from account.entity.profile_gender_type import ProfileGenderType
 class Profile(models.Model):
     nickname = models.CharField(max_length=64, unique=True)
     email = models.CharField(max_length=64, unique=True)
+    password = models.CharField(max_length=64, default=None, null=True)  # 일반 회원가입일 경우 사용하는 비밀번호
     gender = models.ForeignKey(ProfileGenderType, on_delete=models.CASCADE)   # 성별 필드 추가
     birthyear = models.IntegerField()           # 생년월일 필드 추가
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
