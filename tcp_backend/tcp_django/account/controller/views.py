@@ -1,5 +1,6 @@
 import hashlib
 import os
+import uuid
 
 from dotenv import load_dotenv
 from rest_framework import viewsets, status
@@ -24,7 +25,8 @@ class AccountView(viewsets.ViewSet):
         print("checkEmailDuplication()")
 
         try:
-            email = request.data.get("newEmail")
+            print(f"request.data: {request.data}")
+            email = request.data.get("email")
             print(f"email: {email}")
             isDuplicate = self.accountService.checkEmailDuplication(email)
             print(f"isDuplicate: {isDuplicate}")
@@ -176,3 +178,27 @@ class AccountView(viewsets.ViewSet):
             )  # 에러 처리 추가
         birthyear = profile.birthyear
         return Response(birthyear, status=status.HTTP_200_OK)
+
+    def checkPassword(self, request):
+        try:
+            email = request.data.get("email")
+            password = request.data.get("password")
+            profile = self.profileRepository.findByEmail(email)
+
+            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            hashedPassword = hashlib.sha256(encodedPassword)
+            password = hashedPassword.hexdigest()
+
+            isCollect = True if password == profile.password else False
+            return Response(
+                {
+                    "isCollect": isCollect,
+                    "message": (
+                        "비밀번호 일치" if isCollect else "비밀번호가 일치하지 않음"
+                    ),
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            print("비밀번호 확인 중 에러 발생:", e)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
