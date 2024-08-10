@@ -107,11 +107,11 @@ class AccountView(viewsets.ViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def getNickname(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        print(f"email이 왜 안나올까: {email}")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
@@ -119,18 +119,18 @@ class AccountView(viewsets.ViewSet):
         nickname = profile.nickname
         return Response(nickname, status=status.HTTP_200_OK)
 
-    def getEmail(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
-            return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
-        if profile is None:
-            return Response(
-                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
-            )  # 에러 처리 추가
-        email = profile.email
-        return Response(email, status=status.HTTP_200_OK)
+    # def getEmail(self, request):
+    #     userToken = request.data.get("userToken")
+    #     if not userToken:
+    #         return Response(None, status=status.HTTP_200_OK)
+    #     accountId = self.redisService.getValueByKey(userToken)
+    #     profile = self.profileRepository.findById(accountId)
+    #     if profile is None:
+    #         return Response(
+    #             {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+    #         )  # 에러 처리 추가
+    #     email = profile.email
+    #     return Response(email, status=status.HTTP_200_OK)
 
     def withdrawAccount(self, request):
         try:
@@ -154,24 +154,24 @@ class AccountView(viewsets.ViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def getGender(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        id = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findByGender(id)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
             )  # 에러 처리 추가
-        gender = profile.gender_type
-        return Response(gender, status=status.HTTP_200_OK)
+        genderId = profile.gender_id
+        profileGenderType = self.profileRepository.findGenderTypeByGenderId(genderId)
+        genderType = profileGenderType.gender_type
+        return Response(genderType, status=status.HTTP_200_OK)
 
     def getBirthyear(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND

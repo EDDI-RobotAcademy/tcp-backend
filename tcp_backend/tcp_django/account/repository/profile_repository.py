@@ -27,5 +27,5 @@ class ProfileRepository(ABC):
         pass
 
     @abstractmethod
-    def findByGender(self, id):
+    def findGenderTypeByGenderId(self, genderId):
         pass
