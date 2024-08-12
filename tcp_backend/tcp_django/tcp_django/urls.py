@@ -23,4 +23,5 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('community/', include('community.urls')),
     path("view-count/", include('viewCount.urls')),
+    path('google_oauth/', include('google_oauth.urls')),
 ]

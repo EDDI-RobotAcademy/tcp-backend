@@ -34,7 +34,7 @@ load_dotenv()
 
 MY_IP = os.getenv('MY_IP')
 
-ALLOWED_HOSTS = [MY_IP]
+ALLOWED_HOSTS = ['localhost', MY_IP]
 
 
 
@@ -74,6 +74,14 @@ KAKAO = {
     'USERINFO_REQUEST_URI': os.getenv('KAKAO_USERINFO_REQUEST_URI'),
 }
 
+GOOGLE = {
+    'LOGIN_URL': os.getenv('GOOGLE_LOGIN_URL'),
+    'CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
+    'CLIENT_SECRET': os.getenv('GOOGLE_CLIENT_SECRET'),
+    'REDIRECT_URI': os.getenv('GOOGLE_REDIRECT_URI'),
+    'TOKEN_REQUEST_URI': os.getenv('GOOGLE_TOKEN_REQUEST_URI'),
+    'USERINFO_REQUEST_URI': os.getenv('GOOGLE_USERINFO_REQUEST_URI')
+}
 
 
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
