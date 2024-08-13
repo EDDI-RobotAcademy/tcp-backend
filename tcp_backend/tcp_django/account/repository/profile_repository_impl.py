@@ -35,20 +35,21 @@ class ProfileRepositoryImpl(ProfileRepository):
 
     def findByNickname(self, nickname):
         try:
-            profile = Profile.object.get(nickname=nickname)
+            profile = Profile.objects.get(nickname=nickname)
             return profile
         except Profile.DoesNotExist:
             print(f"nickname으로 profile 찾을 수 없음: {nickname}")
             return None
         except Exception as e:
-            print(f"nickname 중복 검사 중 에러 발생: {nickname}")
+            print(f"nickname 중복 검사 중 에러 발생: {e}")
             return None
 
-    def create(self, nickname, email, gender, birthyear, account):
+    def create(self, nickname, email, password, gender, birthyear, account):
         gender = ProfileGenderType.objects.create(gender_type=gender)
         profile = Profile.objects.create(
             nickname=nickname,
             email=email,
+            password=password,
             gender=gender,
             birthyear=birthyear,
             account=account
@@ -83,13 +84,13 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f"로그인 기록 생성 중 에러 발생: {e}")
             return None
 
-    def findByGender(self, id):
+    def findGenderTypeByGenderId(self, genderId):
         try:
-            profile = ProfileGenderType.objects.get(id=id)
-            return profile
-        except Profile.DoesNotExist:
-            print('accountId와 일치하는 계정이 없습니다')
+            genderType = ProfileGenderType.objects.get(id=genderId)
+            return genderType
+        except ProfileGenderType.DoesNotExist:
+            print('genderId와 일치하는 genderType이 없습니다')
             return None
         except Exception as e:
-            print(f"accountId로 계정 찾는 중 에러 발생: {e}")
+            print(f"genderId로 genderType 찾는 중 에러 발생: {e}")
             return None

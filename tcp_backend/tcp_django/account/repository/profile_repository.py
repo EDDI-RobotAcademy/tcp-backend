@@ -11,7 +11,7 @@ class ProfileRepository(ABC):
         pass
 
     @abstractmethod
-    def create(self, nickname, email, gender, birthyear, account):
+    def create(self, nickname, email, password, gender, birthyear, account):
         pass
 
     @abstractmethod
@@ -27,5 +27,5 @@ class ProfileRepository(ABC):
         pass
 
     @abstractmethod
-    def findByGender(self, id):
+    def findGenderTypeByGenderId(self, genderId):
         pass

@@ -11,7 +11,7 @@ class AccountService(ABC):
         pass
 
     @abstractmethod
-    def registerAccount(self, loginType, roleType, nickname, email, gender, birthyear):
+    def registerAccount(self, loginType, roleType, nickname, email, password, gender, birthyear):
         pass
 
     @abstractmethod

@@ -1,3 +1,8 @@
+import hashlib
+import os
+import uuid
+
+from dotenv import load_dotenv
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -14,12 +19,17 @@ class AccountView(viewsets.ViewSet):
     accountRepository = AccountRepositoryImpl.getInstance()
     redisService = RedisServiceImpl.getInstance()
 
+    load_dotenv()
+
     def checkEmailDuplication(self, request):
         print("checkEmailDuplication()")
 
         try:
+            print(f"request.data: {request.data}")
             email = request.data.get("email")
+            print(f"email: {email}")
             isDuplicate = self.accountService.checkEmailDuplication(email)
+            print(f"isDuplicate: {isDuplicate}")
 
             return Response(
                 {
@@ -59,30 +69,49 @@ class AccountView(viewsets.ViewSet):
         try:
             nickname = request.data.get("nickname")
             email = request.data.get("email")
+            password = request.data.get("password")
             gender = request.data.get("gender")  # 성별 추가
             birthyear = request.data.get("birthyear")  # 생년월일 추가
+            loginType = request.data.get("loginType")
 
-            account = self.accountService.registerAccount(
-                loginType="KAKAO",
-                roleType="NORMAL",
-                nickname=nickname,
-                email=email,
-                gender=gender,
-                birthyear=birthyear,
-            )
+            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            hashedPassword = hashlib.sha256(encodedPassword)
+            password = hashedPassword.hexdigest()
+
+            if loginType == "NORMAL":
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=password,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+            else:
+                account = self.accountService.registerAccount(
+                    loginType=loginType,
+                    roleType="NORMAL",
+                    nickname=nickname,
+                    email=email,
+                    password=None,
+                    gender=gender,
+                    birthyear=birthyear,
+                )
+
 
             serializer = AccountSerializer(account)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             print("계정 생성 중 에러 발생:", e)
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def getNickname(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        print(f"email이 왜 안나올까: {email}")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
@@ -90,18 +119,18 @@ class AccountView(viewsets.ViewSet):
         nickname = profile.nickname
         return Response(nickname, status=status.HTTP_200_OK)
 
-    def getEmail(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
-            return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
-        if profile is None:
-            return Response(
-                {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
-            )  # 에러 처리 추가
-        email = profile.email
-        return Response(email, status=status.HTTP_200_OK)
+    # def getEmail(self, request):
+    #     userToken = request.data.get("userToken")
+    #     if not userToken:
+    #         return Response(None, status=status.HTTP_200_OK)
+    #     accountId = self.redisService.getValueByKey(userToken)
+    #     profile = self.profileRepository.findById(accountId)
+    #     if profile is None:
+    #         return Response(
+    #             {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+    #         )  # 에러 처리 추가
+    #     email = profile.email
+    #     return Response(email, status=status.HTTP_200_OK)
 
     def withdrawAccount(self, request):
         try:
@@ -125,27 +154,51 @@ class AccountView(viewsets.ViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def getGender(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        id = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findByGender(id)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
             )  # 에러 처리 추가
-        gender = profile.gender_type
-        return Response(gender, status=status.HTTP_200_OK)
+        genderId = profile.gender_id
+        profileGenderType = self.profileRepository.findGenderTypeByGenderId(genderId)
+        genderType = profileGenderType.gender_type
+        return Response(genderType, status=status.HTTP_200_OK)
 
     def getBirthyear(self, request):
-        userToken = request.data.get("userToken")
-        if not userToken:
+        email = request.data.get("email")
+        if not email:
             return Response(None, status=status.HTTP_200_OK)
-        accountId = self.redisService.getValueByKey(userToken)
-        profile = self.profileRepository.findById(accountId)
+        profile = self.profileRepository.findByEmail(email)
         if profile is None:
             return Response(
                 {"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
             )  # 에러 처리 추가
         birthyear = profile.birthyear
         return Response(birthyear, status=status.HTTP_200_OK)
+
+    def checkPassword(self, request):
+        try:
+            email = request.data.get("email")
+            password = request.data.get("password")
+            profile = self.profileRepository.findByEmail(email)
+
+            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            hashedPassword = hashlib.sha256(encodedPassword)
+            password = hashedPassword.hexdigest()
+
+            isCollect = True if password == profile.password else False
+            return Response(
+                {
+                    "isCollect": isCollect,
+                    "message": (
+                        "비밀번호 일치" if isCollect else "비밀번호가 일치하지 않음"
+                    ),
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            print("비밀번호 확인 중 에러 발생:", e)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
