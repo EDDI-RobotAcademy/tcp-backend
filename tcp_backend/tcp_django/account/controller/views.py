@@ -179,22 +179,31 @@ class AccountView(viewsets.ViewSet):
         birthyear = profile.birthyear
         return Response(birthyear, status=status.HTTP_200_OK)
 
-    def checkPassword(self, request):
+    def checkNormalLogin(self, request):
         try:
             email = request.data.get("email")
             password = request.data.get("password")
             profile = self.profileRepository.findByEmail(email)
 
+            if not profile:
+                isEmailCollect = False
+                isPasswordCollect = False
+                return Response({"isEmailCollect": isEmailCollect,
+                                 "isPasswordCollect": isPasswordCollect,
+                                 "message": '존재하지 않는 이메일'},
+                                status=status.HTTP_200_OK,)
+
             encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
             hashedPassword = hashlib.sha256(encodedPassword)
             password = hashedPassword.hexdigest()
 
-            isCollect = True if password == profile.password else False
+            isEmailCollect = True
+            isPasswordCollect = True if password == profile.password else False
             return Response(
-                {
-                    "isCollect": isCollect,
+                {"isEmailCollect": isEmailCollect,
+                    "isPasswordCollect": isPasswordCollect,
                     "message": (
-                        "비밀번호 일치" if isCollect else "비밀번호가 일치하지 않음"
+                        "비밀번호 일치" if isPasswordCollect else "비밀번호가 일치하지 않음"
                     ),
                 },
                 status=status.HTTP_200_OK,
