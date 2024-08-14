@@ -108,7 +108,6 @@ class AccountView(viewsets.ViewSet):
 
     def getNickname(self, request):
         email = request.data.get("email")
-        print(f"email이 왜 안나올까: {email}")
         if not email:
             return Response(None, status=status.HTTP_200_OK)
         profile = self.profileRepository.findByEmail(email)
