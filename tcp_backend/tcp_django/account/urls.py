@@ -18,5 +18,5 @@ urlpatterns = [
     path('withdraw', AccountView.as_view({'post': 'withdrawAccount'}), name='withdraw-account'),
     path('gender', AccountView.as_view({'post': 'getGender'}), name='gender-account'),
     path('birthyear', AccountView.as_view({'post': 'getBirthyear'}), name='birthyear-account'),
-    path('password-check', AccountView.as_view({'post': 'checkPassword'}), name='password-check-account'),
+    path('check-normal-login', AccountView.as_view({'post': 'checkNormalLogin'}), name='normal-login-check-account'),
 ]
