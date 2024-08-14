@@ -22,10 +22,12 @@ class AccountRepositoryImpl(AccountRepository):
         return cls.__instance
 
     def create(self, loginType, roleType):
-        loginTypeEntity = AccountLoginType.objects.create(loginType=loginType)
-        roleTypeEntity = AccountRoleType.objects.create(roleType=roleType)
+        loginTypeEntity = AccountLoginType.objects.get_or_create(loginType=loginType)
+        roleTypeEntity = AccountRoleType.objects.get_or_create(roleType=roleType)
+        loginType = loginTypeEntity[0]
+        roleType = roleTypeEntity[0]
 
-        account = Account.objects.create(loginType=loginTypeEntity, roleType=roleTypeEntity)
+        account = Account.objects.create(loginType=loginType, roleType=roleType)
         return account
 
     def findById(self, accountId):

@@ -45,7 +45,8 @@ class ProfileRepositoryImpl(ProfileRepository):
             return None
 
     def create(self, nickname, email, password, gender, birthyear, account):
-        gender = ProfileGenderType.objects.create(gender_type=gender)
+        genderType = ProfileGenderType.objects.get_or_create(gender_type=gender)
+        gender = genderType[0]
         profile = Profile.objects.create(
             nickname=nickname,
             email=email,

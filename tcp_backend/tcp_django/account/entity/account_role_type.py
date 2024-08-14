@@ -8,7 +8,7 @@ class AccountRoleType(models.Model):
         NORMAL = 'NORMAL'
         BLACKLIST = 'BLACKLIST'
         
-    roleType = models.CharField(max_length=64, choices=RoleType.choices, default=RoleType.NORMAL)
+    roleType = models.CharField(max_length=64, choices=RoleType.choices, default=RoleType.NORMAL, unique=True)
 
     def __str__(self):
         return self.roleType
