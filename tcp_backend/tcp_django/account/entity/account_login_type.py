@@ -7,7 +7,7 @@ class AccountLoginType(models.Model):
         GENERAL = 'NORMAL', 'normal'
         GOOGLE = 'GOOGLE', 'google'
 
-    loginType = models.CharField(max_length=10, choices=LoginType.choices)
+    loginType = models.CharField(max_length=10, choices=LoginType.choices, unique=True)
 
     def __str__(self):
         return self.loginType

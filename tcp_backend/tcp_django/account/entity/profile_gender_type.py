@@ -6,7 +6,7 @@ class ProfileGenderType(models.Model):
         MALE = 'MALE'
         FEMALE = 'FEMALE'
 
-    gender_type = models.CharField(max_length=10, choices=GenderType.choices)
+    gender_type = models.CharField(max_length=10, choices=GenderType.choices, unique=True)
 
     def __str__(self):
         return self.gender_type
