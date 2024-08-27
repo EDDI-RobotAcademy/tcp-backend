@@ -44,13 +44,14 @@ class ProfileRepositoryImpl(ProfileRepository):
             print(f"nickname 중복 검사 중 에러 발생: {e}")
             return None
 
-    def create(self, nickname, email, password, gender, birthyear, account):
+    def create(self, nickname, email, password, salt, gender, birthyear, account):
         genderType = ProfileGenderType.objects.get_or_create(gender_type=gender)
         gender = genderType[0]
         profile = Profile.objects.create(
             nickname=nickname,
             email=email,
             password=password,
+            salt=salt,
             gender=gender,
             birthyear=birthyear,
             account=account
