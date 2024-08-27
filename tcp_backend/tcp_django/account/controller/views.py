@@ -1,6 +1,8 @@
 import hashlib
 import os
 import uuid
+import random
+import string
 
 from dotenv import load_dotenv
 from rest_framework import viewsets, status
@@ -74,7 +76,10 @@ class AccountView(viewsets.ViewSet):
             birthyear = request.data.get("birthyear")  # 생년월일 추가
             loginType = request.data.get("loginType")
 
-            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            randomString = string.ascii_letters + string.digits + string.punctuation
+            salt = ''.join(random.choice(randomString) for _ in range(16))
+
+            encodedPassword = salt.encode("utf-8") + password.encode("utf-8")
             hashedPassword = hashlib.sha256(encodedPassword)
             password = hashedPassword.hexdigest()
 
@@ -85,6 +90,7 @@ class AccountView(viewsets.ViewSet):
                     nickname=nickname,
                     email=email,
                     password=password,
+                    salt=salt,
                     gender=gender,
                     birthyear=birthyear,
                 )
@@ -95,10 +101,10 @@ class AccountView(viewsets.ViewSet):
                     nickname=nickname,
                     email=email,
                     password=None,
+                    salt=None,
                     gender=gender,
                     birthyear=birthyear,
                 )
-
 
             serializer = AccountSerializer(account)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -192,7 +198,7 @@ class AccountView(viewsets.ViewSet):
                                  "message": '존재하지 않는 이메일'},
                                 status=status.HTTP_200_OK,)
 
-            encodedPassword = os.getenv("SALT").encode("utf-8") + password.encode("utf-8")
+            encodedPassword = profile.salt.encode("utf-8") + password.encode("utf-8")
             hashedPassword = hashlib.sha256(encodedPassword)
             password = hashedPassword.hexdigest()
 
