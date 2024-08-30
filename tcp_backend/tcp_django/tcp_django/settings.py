@@ -34,7 +34,7 @@ load_dotenv()
 
 MY_IP = os.getenv('MY_IP')
 
-ALLOWED_HOSTS = ['localhost', MY_IP]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', MY_IP]
 
 
 
