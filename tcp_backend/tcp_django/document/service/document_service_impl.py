@@ -24,3 +24,6 @@ class DocumentServiceImpl(DocumentService):
 
     def createDocument(self, documentData):
         return self.__documentRepository.create(documentData)
+
+    def readDocument(self, documentId):
+        return self.__documentRepository.findByDocumentId(documentId)

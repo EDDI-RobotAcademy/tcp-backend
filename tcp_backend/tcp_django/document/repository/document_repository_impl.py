@@ -25,3 +25,6 @@ class DocumentRepositoryImpl(DocumentRepository):
         document = Document(**documentData)
         document.save()
         return document
+
+    def findByDocumentId(self, documentId):
+        return Document.objects.get(documentId=documentId)
