@@ -5,3 +5,7 @@ class DocumentService(ABC):
     @abstractmethod
     def list(self):
         pass
+
+    @abstractmethod
+    def createDocument(self, documentData):
+        pass

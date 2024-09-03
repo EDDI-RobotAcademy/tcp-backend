@@ -20,3 +20,8 @@ class DocumentRepositoryImpl(DocumentRepository):
 
     def list(self):
         return Document.objects.all().order_by('regDate')
+
+    def create(self, documentData):
+        document = Document(**documentData)
+        document.save()
+        return document

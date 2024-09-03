@@ -16,3 +16,19 @@ class DocumentView(viewsets.ViewSet):
         serializer = DocumentSerializer(documentList, many=True)
         print('serialized documentList:', serializer.data)
         return Response(serializer.data)
+
+    def create(self, request):
+        # 파일 데이터를 포함한 새로운 데이터 생성
+        data = request.data.copy()
+
+        data['file'] = request.FILES.get('file')
+
+        serializer = DocumentSerializer(data=data)
+        # files 매개변수 제거
+
+        if serializer.is_valid():
+            document = self.documentService.createDocument(serializer.validated_data)
+            return Response(DocumentSerializer(document).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
