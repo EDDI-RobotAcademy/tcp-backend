@@ -32,3 +32,12 @@ class DocumentView(viewsets.ViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+    def read(self, request, pk=None):
+        document = self.documentService.readDocument(pk)
+        if document:
+            # view_count_document_service.increment_document_view_count(pk)
+            serializer = DocumentSerializer(document)
+            return Response(serializer.data)
+        return Response({'status': 'error', 'message': 'Document not found'}, status=status.HTTP_404_NOT_FOUND)
+

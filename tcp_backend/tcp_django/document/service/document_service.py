@@ -9,3 +9,7 @@ class DocumentService(ABC):
     @abstractmethod
     def createDocument(self, documentData):
         pass
+
+    @abstractmethod
+    def readDocument(self, documentId):
+        pass

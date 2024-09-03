@@ -9,3 +9,7 @@ class DocumentRepository(ABC):
     @abstractmethod
     def create(self, documentData):
         pass
+
+    @abstractmethod
+    def findByDocumentId(self, documentId):
+        pass
