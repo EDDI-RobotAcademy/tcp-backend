@@ -21,3 +21,6 @@ class DocumentServiceImpl(DocumentService):
 
     def list(self):
         return self.__documentRepository.list()
+
+    def createDocument(self, documentData):
+        return self.__documentRepository.create(documentData)
