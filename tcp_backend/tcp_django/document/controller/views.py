@@ -46,3 +46,13 @@ class DocumentView(viewsets.ViewSet):
         self.documentService.removeDocument(pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+    def modifyDocument(self, request, pk=None):
+        document = self.documentService.readDocument(pk)
+        serializer = DocumentSerializer(document, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            updatedDocument = self.documentService.updateDocument(pk, serializer.validated_data)
+            return Response(DocumentSerializer(updatedDocument).data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
