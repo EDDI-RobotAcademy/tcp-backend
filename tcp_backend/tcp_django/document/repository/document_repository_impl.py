@@ -35,3 +35,11 @@ class DocumentRepositoryImpl(DocumentRepository):
             document.delete()
         else:
             raise Document.DoesNotExist(f'Document with id {documentId} does not exist.')
+
+    def update(self, document, documentData):
+        for key, value in documentData.items():
+            print(f"key: {key}, value: {value}")
+            setattr(document, key, value)
+
+        document.save()
+        return document

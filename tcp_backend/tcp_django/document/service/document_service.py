@@ -17,3 +17,7 @@ class DocumentService(ABC):
     @abstractmethod
     def removeDocument(self, documentId):
         pass
+
+    @abstractmethod
+    def updateDocument(self, documentId, documentData):
+        pass

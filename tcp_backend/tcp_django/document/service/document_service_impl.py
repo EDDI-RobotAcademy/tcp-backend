@@ -30,3 +30,8 @@ class DocumentServiceImpl(DocumentService):
 
     def removeDocument(self, documentId):
         return self.__documentRepository.deleteByDocumentId(documentId)
+
+    def updateDocument(self, documentId, documentData):
+        document = self.__documentRepository.findByDocumentId(documentId)
+        return self.__documentRepository.update(document, documentData)
+
