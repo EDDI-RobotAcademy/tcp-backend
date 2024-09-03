@@ -12,17 +12,18 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Community',
+            name='Document',
             fields=[
-                ('communityId', models.AutoField(primary_key=True, serialize=False)),
+                ('documentId', models.AutoField(primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=128)),
                 ('writer', models.CharField(max_length=32)),
+                ('file', models.FileField(upload_to='documents/')),
                 ('content', models.TextField()),
                 ('regDate', models.DateTimeField(auto_now_add=True)),
                 ('updDate', models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'community',
+                'db_table': 'document',
             },
         ),
     ]
