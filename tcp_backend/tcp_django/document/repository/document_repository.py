@@ -13,3 +13,7 @@ class DocumentRepository(ABC):
     @abstractmethod
     def findByDocumentId(self, documentId):
         pass
+
+    @abstractmethod
+    def deleteByDocumentId(self, documentId):
+        pass
