@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'account',
     'community',
     'viewCount',
+    'document',
 ]
 
 MIDDLEWARE = [
@@ -214,3 +215,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 업로드한 파일의 저장 위치
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
