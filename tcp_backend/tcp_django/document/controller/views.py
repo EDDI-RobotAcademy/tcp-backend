@@ -41,3 +41,8 @@ class DocumentView(viewsets.ViewSet):
             return Response(serializer.data)
         return Response({'status': 'error', 'message': 'Document not found'}, status=status.HTTP_404_NOT_FOUND)
 
+
+    def removeDocument(self, request, pk=None):
+        self.documentService.removeDocument(pk)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

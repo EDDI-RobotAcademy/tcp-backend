@@ -13,3 +13,7 @@ class DocumentService(ABC):
     @abstractmethod
     def readDocument(self, documentId):
         pass
+
+    @abstractmethod
+    def removeDocument(self, documentId):
+        pass

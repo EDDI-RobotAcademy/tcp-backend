@@ -27,3 +27,6 @@ class DocumentServiceImpl(DocumentService):
 
     def readDocument(self, documentId):
         return self.__documentRepository.findByDocumentId(documentId)
+
+    def removeDocument(self, documentId):
+        return self.__documentRepository.deleteByDocumentId(documentId)

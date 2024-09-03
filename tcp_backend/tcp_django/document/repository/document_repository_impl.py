@@ -28,3 +28,10 @@ class DocumentRepositoryImpl(DocumentRepository):
 
     def findByDocumentId(self, documentId):
         return Document.objects.get(documentId=documentId)
+
+    def deleteByDocumentId(self, documentId):
+        document = Document.objects.filter(documentId=documentId).first()
+        if document:
+            document.delete()
+        else:
+            raise Document.DoesNotExist(f'Document with id {documentId} does not exist.')
