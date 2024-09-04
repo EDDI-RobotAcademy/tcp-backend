@@ -2,7 +2,6 @@
 
 TEST_DIRS=$(find . -path ./.venv -prune -o -type d -name 'tests' -print)
 
-
 APP_TESTS=()
 
 for TEST_DIR in $TEST_DIRS; do
