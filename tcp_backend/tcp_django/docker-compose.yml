@@ -24,12 +24,18 @@ services:
       - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
       - KAKAO_TOKEN_REQUEST_URI=${KAKAO_TOKEN_REQUEST_URI}
       - KAKAO_USERINFO_REQUEST_URI=${KAKAO_USERINFO_REQUEST_URI}
+      - GOOGLE_LOGIN_URL=${GOOGLE_LOGIN_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      - GOOGLE_TOKEN_REQUEST_URI=${GOOGLE_TOKEN_REQUEST_URI}
+      - GOOGLE_USERINFO_REQUEST_URI=${GOOGLE_USERINFO_REQUEST_URI}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     networks:
-      - app
+      - app-network
 
   db:
     image: mysql:8.0
@@ -46,7 +52,7 @@ services:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - app
+      - app-network
 
   redis:
     image: redis:latest
@@ -58,7 +64,7 @@ services:
       - redis_data:/data
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     networks:
-      - app
+      - app-network
 
 volumes:
   db_data:
@@ -66,5 +72,5 @@ volumes:
   app:
 
 networks:
-  app:
+  app-network:
     driver: bridge
